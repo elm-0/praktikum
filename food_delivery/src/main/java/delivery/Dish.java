@@ -1,7 +1,6 @@
 package delivery;
 public class Dish {
     
-    //String allegries;   //tova ne znam dali ima smisul da go dobavqme, no neka stoi za ideq
 
     private String name;
     private double price;
@@ -21,5 +20,10 @@ public class Dish {
     @Override
     public String toString() {
         return name + " - $" + price;
+    }
+
+
+    public void setAvailable(boolean availableChange) {
+        this.available = availableChange;
     }
 }

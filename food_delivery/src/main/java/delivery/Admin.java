@@ -20,9 +20,9 @@ public class Admin extends User {
         SUPPORT
     }
 
-    public Admin() {
-        super();
-    }
+    // public Admin() {  //davashe greshka i go slojih kato komentar
+    //    super();
+    // }
 
     public Admin(String username, String password) {
         super(username, hashPassword(password), Role.ADMIN.toString());
