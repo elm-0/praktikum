@@ -15,7 +15,7 @@ public class AuthenticationService {
 
     public AuthenticationService() { //тестови потребители
         users.put("admin", new Admin("admin", "admin"));
-        users.put("employee", new Employee("employee", "employee"));
+        users.put("employee", new Employee("employee", "employee", "EMP001"));
         users.put("user", new User("user", "user", "USER"));
     }
 
@@ -32,7 +32,7 @@ public class AuthenticationService {
                 newUser = new Admin(username, password);
                 break;
             case "employee":
-                newUser = new Employee(username, password);
+                newUser = new Employee(username, password, "employeeId");
                 break;
             case "user":
                 newUser = new User(username, password, "USER");
