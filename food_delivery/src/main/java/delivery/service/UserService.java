@@ -1,8 +1,9 @@
 package delivery.service;
 
+import org.springframework.stereotype.Service;
+
 import delivery.User;
 import delivery.repository.UserRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {

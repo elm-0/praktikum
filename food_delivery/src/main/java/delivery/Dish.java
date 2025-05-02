@@ -1,7 +1,15 @@
 package delivery;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 public class Dish {
     
-
+    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private double price;
     private boolean available;
@@ -12,7 +20,7 @@ public class Dish {
         this.available = available;
     }
 
-
+    public Long getId() { return id; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public boolean getAvailable() {return available; }
@@ -22,8 +30,15 @@ public class Dish {
         return name + " - $" + price;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
 
-    public void setAvailable(boolean availableChange) {
-        this.available = availableChange;
+    public void setPrice(double price){
+        this.price = price;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

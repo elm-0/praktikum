@@ -2,8 +2,27 @@
     import java.util.ArrayList;
     import java.util.List;
 
+    import jakarta.persistence.Entity;
+    import jakarta.persistence.GeneratedValue;
+    import jakarta.persistence.GenerationType;
+    import jakarta.persistence.Id;
+    import jakarta.persistence.ManyToMany;
+    
+    @Entity
     public class ShoppingCart {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        @ManyToMany
         private List<Dish> items = new ArrayList<>();
+
+        public ShoppingCart() {}
+
+        public Long getId() {
+            return id;
+        }
 
         public void addItem(Dish item) {
             items.add(item);
@@ -14,11 +33,7 @@
         }
 
         public double getTotal() {
-            double total = 0;
-            for (Dish item : items) {
-                total += item.getPrice();
-            }
-            return total;
+            return items.stream().mapToDouble(Dish::getPrice).sum();
         }
 
         public void displayCart() {
@@ -32,8 +47,8 @@
         public List<Dish> getItems() {
             return items;
         }
-        
+
         public void clearCart() {
-            items.clear();  
+            items.clear();
         }
-    }
+}
