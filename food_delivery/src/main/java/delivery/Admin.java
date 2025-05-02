@@ -1,14 +1,17 @@
 package delivery;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
+@Entity
 public class Admin extends User {
 
-    private List<String> actionHistory;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "admin_actions", joinColumns = @JoinColumn(name = "admin_id"))
+    @Column(name = "action")
+    private List<String> actionHistory = new ArrayList<>();
 
     public enum Role {
         SUPER_ADMIN,
@@ -17,14 +20,16 @@ public class Admin extends User {
         SUPPORT
     }
 
+    public Admin() {
+        super();
+    }
+
     public Admin(String username, String password) {
-        super(username, hashPassword(password), "ADMIN");
-        this.actionHistory = new ArrayList<>();
+        super(username, hashPassword(password), Role.ADMIN.toString());
     }
 
     public Admin(String username, String password, String role) {
         super(username, hashPassword(password), role);
-        this.actionHistory = new ArrayList<>();
     }
 
     public boolean isSuperAdmin() {
@@ -45,34 +50,31 @@ public class Admin extends User {
 
     private static String hashPassword(String password) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
             for (byte b : hashedBytes) {
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Грешка при хеширането на паролата", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Грешка при хеширане", e);
         }
-    }
-
-    @Override
-    public void setUsername(String username) {
-        if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Името не може да бъде празно");
-        }
-        super.setUsername(username);
-        addAction("Името е променено на " + username);
     }
 
     @Override
     public void setPassword(String password) {
-        if (password == null || password.trim().isEmpty() || password.length() < 8) {
-            throw new IllegalArgumentException("Паролата трябва да е дълга поне 8 символа и не може да бъде празна");
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("Паролата трябва да е минимум 8 символа.");
         }
         super.setPassword(hashPassword(password));
         addAction("Паролата е променена");
+    }
+
+    @Override
+    public void setUsername(String username) {
+        super.setUsername(username);
+        addAction("Името е променено на " + username);
     }
 
     @Override
