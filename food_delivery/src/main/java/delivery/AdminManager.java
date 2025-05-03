@@ -6,12 +6,14 @@ import delivery.food_delivery.*;
 
 public class AdminManager {
     private List<Admin> admins;
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
+    private List<Employee> employees;
     private Admin currentAdmin;
 
     public AdminManager() { 
         this.admins = new ArrayList<>();
         this.users = new ArrayList<>();
+        this.employees = new ArrayList<>();
         this.currentAdmin = null;
     } 
 
@@ -131,5 +133,58 @@ public class AdminManager {
         admin.setRole(newRole);
         admin.addAction("Ролята е променена на " + newRole);
         return true;
+    }
+
+    //търсене на служител по ID
+    public Employee findEmployeeById(String employeeId) throws EmployeeNotFoundException {
+        if (employeeId == null || employeeId.isEmpty()) {
+            throw new IllegalArgumentException("ID-то на служителя не може да бъде null или празно");
+        }
+        for (Employee employee : employees) {
+            if (employee.getEmployeeId().equals(employeeId)) {
+                return employee;
+            }
+        }
+        throw new EmployeeNotFoundException("Не е намерен служител с ID: " + employeeId);
+    }
+
+    // добавяне на нов служител
+    public void addEmployee(Employee employee, Admin admin) 
+        throws EmployeeAlreadyExistsException, IllegalArgumentException {
+        if (employee == null) {
+            throw new IllegalArgumentException("Служителят не може да бъде null");
+        }
+        try {
+            findEmployeeById(employee.getEmployeeId());
+            throw new EmployeeAlreadyExistsException("Служител с ID " + employee.getEmployeeId() + " вече съществува");
+        } catch (EmployeeNotFoundException e) {
+        }
+        employees.add(employee);
+        admin.addAction("Добавен е нов служител с ID: " + employee.getEmployeeId());
+    }
+
+    // премахване на служител
+    public void removeEmployee( String employeeId, Admin admin) throws EmployeeNotFoundException{
+        Employee employee=findEmployeeById(employeeId);
+        if(employee==null){
+            throw new EmployeeNotFoundException(employeeId)
+        }
+        employees.remove(employee);
+        admin.addAction("Премахнат е служител с ID: " + employeeId);
+    }
+
+    //промяна на статус на служител(активен/неактивен)
+    public void setEmployeeActive(String employeeId,boolean isAvailable, Admin admin) throws EmployeeNotFoundException{
+        Employee employee=findEmployeeById(employeeId);
+        if(employee==null){
+            throw new EmployeeNotFoundException(employeeId);
+        }
+        employee.setAvailable(isAvailable);
+        admin.addAction("Променен е статусът на служител с ID: " + employeeId + " на " + (isAvailable ? "активен" : "неактивен"));
+    }
+
+    //списък с всички служители
+    public List<Employee> getAllEmployees() {
+        return new ArrayList<>(employees);
     }
 }

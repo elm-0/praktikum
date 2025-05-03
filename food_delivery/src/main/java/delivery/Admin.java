@@ -92,6 +92,6 @@ public class Admin extends User {
     }
 
     public List<String> getActionHistory() {
-        return actionHistory;
+        return new ArrayList<>(actionHistory);
     }
 }
