@@ -104,6 +104,9 @@ public class AdminManager {
     // update методи
     public boolean updatePassword(String username, String newPassword) 
             throws AdminNotFoundException, IllegalArgumentException {
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("Паролата не може да бъде null или празна");
+        }
         Admin admin = findByUsername(username);
         if (admin == null) {
             throw new AdminNotFoundException("Не е намерен админ с име: " + username);
@@ -114,7 +117,10 @@ public class AdminManager {
     }
 
     public boolean updateUsername(String oldUsername, String newUsername) 
-            throws AdminNotFoundException, AdminAlreadyExistsException {
+            throws AdminNotFoundException, AdminAlreadyExistsException, IllegalArgumentException {
+        if (newUsername == null || newUsername.isEmpty()) {
+            throw new IllegalArgumentException("Потребителското име не може да бъде null или празно");
+        }
         Admin admin = findByUsername(oldUsername);
         if (admin == null) {
             throw new AdminNotFoundException("Не е намерен админ с име: " + oldUsername);
@@ -127,7 +133,10 @@ public class AdminManager {
         return true;
     }
 
-    public boolean updateRole(String username, String newRole) throws AdminNotFoundException {
+    public boolean updateRole(String username, String newRole) throws AdminNotFoundException, IllegalArgumentException {
+        if (newRole == null || newRole.isEmpty()) {
+            throw new IllegalArgumentException("Ролята не може да бъде null или празна");
+        }
         Admin admin = findByUsername(username);
         if (admin == null) {
             throw new AdminNotFoundException("Не е намерен админ с име: " + username);
