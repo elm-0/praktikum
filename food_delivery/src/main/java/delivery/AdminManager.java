@@ -53,6 +53,7 @@ public class AdminManager {
             throw new AdminAlreadyExistsException(admin.getUsername());
         }
         admins.add(admin);
+        admin.addAction("Добавен е нов администратор с име: " + admin.getUsername());
     }
     
 
@@ -61,6 +62,7 @@ public class AdminManager {
         if (admin == null) {
             throw new AdminNotFoundException("Не е намерен админ с име: " + username);
         }
+        admin.addAction("Премахнат е администратор с име: " + username);
         return admins.remove(admin);
     }
 
@@ -167,7 +169,7 @@ public class AdminManager {
     public void removeEmployee( String employeeId, Admin admin) throws EmployeeNotFoundException{
         Employee employee=findEmployeeById(employeeId);
         if(employee==null){
-            throw new EmployeeNotFoundException(employeeId)
+            throw new EmployeeNotFoundException(employeeId);
         }
         employees.remove(employee);
         admin.addAction("Премахнат е служител с ID: " + employeeId);
@@ -181,7 +183,7 @@ public class AdminManager {
         }
         employee.setAvailable(isAvailable);
         admin.addAction("Променен е статусът на служител с ID: " + employeeId + " на " + (isAvailable ? "активен" : "неактивен"));
-    }
+    } 
 
     //списък с всички служители
     public List<Employee> getAllEmployees() {
