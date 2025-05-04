@@ -11,7 +11,7 @@ import delivery.food_delivery.*;
 import java.util.Scanner;
 
 @Entity
-public class Admin extends User{
+public class Admin extends User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "admin_actions", joinColumns = @JoinColumn(name = "admin_id"))
@@ -20,7 +20,6 @@ public class Admin extends User{
 
     AdminManager adminManager = new AdminManager();
 
-
     public enum Role {
         SUPER_ADMIN,
         ADMIN,
@@ -28,8 +27,8 @@ public class Admin extends User{
         SUPPORT
     }
 
-    // public Admin() {  //davashe greshka i go slojih kato komentar
-    //    super();
+    // public Admin() { //davashe greshka i go slojih kato komentar
+    // super();
     // }
 
     public Admin(String username, String password) {
@@ -105,85 +104,111 @@ public class Admin extends User{
 
     void useAdminManager() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Въведете команда:\n" +
+                "1. Логин\n" +
+                "2. Изход\n" +
+                "3. Добавяне на администратор\n" +
+                "4. Премахване на администратор\n" +
+                "5. Получаване на всички администратори\n" +
+                "6. Смяна на парола\n" +
+                "7. Смяна на потребителско име\n" +
+                "8. Смяна на роля\n" +
+                "9. Изход");
+        int command = scanner.nextInt();
+        switch (command) {
+            case 1:
+                try {
+                    System.out.print("Въведете потребителско име за логин: ");
+                    String loginUsername = scanner.nextLine();
+                    System.out.print("Въведете парола за логин: ");
+                    String loginPassword = scanner.nextLine();
+                    adminManager.login(loginUsername, loginPassword);
+                } catch (AuthenticationException e) {
+                    System.out.println("Грешка при логин: " + e.getMessage());
+                }
+                break;
+            case 2:
+                try {
+                    System.out.println("\nНатиснете Enter за изход...");
+                    scanner.nextLine();
+                    adminManager.logout();
+                } catch (NoAdminLoggedInException e) {
+                    System.out.println("Грешка при изход: " + e.getMessage());
+                }
+                break;
+            case 3:
+                try {
+                    System.out.print("\nВъведете ново потребителско име за администратор: ");
+                    String newAdminUsername = scanner.nextLine();
+                    System.out.print("Въведете парола за новия администратор: ");
+                    String newAdminPassword = scanner.nextLine();
+                    System.out.print("Въведете роля (SUPER_ADMIN, ADMIN, MODERATOR, SUPPORT): ");
+                    String newAdminRole = scanner.nextLine();
 
-        try {
-            System.out.print("Въведете потребителско име за логин: ");
-            String loginUsername = scanner.nextLine();
-            System.out.print("Въведете парола за логин: ");
-            String loginPassword = scanner.nextLine();
-            adminManager.login(loginUsername, loginPassword);
-        } catch (AuthenticationException e) {
-            System.out.println("Грешка при логин: " + e.getMessage());
+                    Admin newAdmin = new Admin(newAdminUsername, newAdminPassword, newAdminRole);
+                    adminManager.addAdmin(newAdmin);
+                    System.out.println("Администраторът е добавен успешно!");
+                } catch (AdminAlreadyExistsException | IllegalArgumentException e) {
+                    System.out.println("Грешка при добавяне: " + e.getMessage());
+                }
+                break;
+            case 4:
+                try {
+                    System.out.print("\nВъведете потребителско име на администратор за премахване: ");
+                    String adminToRemove = scanner.nextLine();
+                    adminManager.removeAdmin(adminToRemove);
+                    System.out.println("Администраторът е премахнат успешно!");
+                } catch (AdminNotFoundException e) {
+                    System.out.println("Грешка при премахване: " + e.getMessage());
+                }
+                break;
+            case 5:
+                System.out.println("\nВсички администратори:");
+                adminManager.getAllAdmins()
+                        .forEach(admin -> System.out.println(admin.getUsername() + " - " + admin.getRole()));
+                break;
+            case 6:
+                try {
+                    System.out.print("\nВъведете потребителско име за смяна на парола: ");
+                    String userForPassword = scanner.nextLine();
+                    System.out.print("Въведете нова парола: ");
+                    String newPassword = scanner.nextLine();
+                    adminManager.updatePassword(userForPassword, newPassword);
+                    System.out.println("Паролата е променена успешно!");
+                } catch (AdminNotFoundException | IllegalArgumentException e) {
+                    System.out.println("Грешка при смяна на парола: " + e.getMessage());
+                }
+                break;
+            case 7:
+                try {
+                    System.out.print("\nВъведете текущо потребителско име: ");
+                    String oldUsername = scanner.nextLine();
+                    System.out.print("Въведете ново потребителско име: ");
+                    String newUsername = scanner.nextLine();
+                    adminManager.updateUsername(oldUsername, newUsername);
+                    System.out.println("Потребителското име е променено успешно!");
+                } catch (AdminNotFoundException | AdminAlreadyExistsException | IllegalArgumentException e) {
+                    System.out.println("Грешка при смяна на име: " + e.getMessage());
+                }
+                break;
+            case 8:
+                try {
+                    System.out.print("\nВъведете потребителско име за смяна на роля: ");
+                    String userForRole = scanner.nextLine();
+                    System.out.print("Въведете нова роля: ");
+                    String newRole = scanner.nextLine();
+                    adminManager.updateRole(userForRole, newRole);
+                    System.out.println("Ролята е променена успешно!");
+                } catch (AdminNotFoundException | IllegalArgumentException e) {
+                    System.out.println("Грешка при смяна на роля: " + e.getMessage());
+                }
+                break;
+            case 9:
+                System.out.println("Изход от администраторския панел.");
+                break;
+            default:
+                System.out.println("Невалидна команда. Моля, опитайте отново.");
         }
-
-        try {
-            System.out.println("\nНатиснете Enter за изход...");
-            scanner.nextLine();
-            adminManager.logout();
-        } catch (NoAdminLoggedInException e) {
-            System.out.println("Грешка при изход: " + e.getMessage());
-        }
-
-        try {
-            System.out.print("\nВъведете ново потребителско име за администратор: ");
-            String newAdminUsername = scanner.nextLine();
-            System.out.print("Въведете парола за новия администратор: ");
-            String newAdminPassword = scanner.nextLine();
-            System.out.print("Въведете роля (SUPER_ADMIN, ADMIN, MODERATOR, SUPPORT): ");
-            String newAdminRole = scanner.nextLine();
-
-            Admin newAdmin = new Admin(newAdminUsername, newAdminPassword, newAdminRole);
-            adminManager.addAdmin(newAdmin);
-            System.out.println("Администраторът е добавен успешно!");
-        } catch (AdminAlreadyExistsException | IllegalArgumentException e) {
-            System.out.println("Грешка при добавяне: " + e.getMessage());
-        }
-
-        try {
-            System.out.print("\nВъведете потребителско име на администратор за премахване: ");
-            String adminToRemove = scanner.nextLine();
-            adminManager.removeAdmin(adminToRemove);
-            System.out.println("Администраторът е премахнат успешно!");
-        } catch (AdminNotFoundException e) {
-            System.out.println("Грешка при премахване: " + e.getMessage());
-        }
-
-        System.out.println("\nВсички администратори:");
-        adminManager.getAllAdmins().forEach(admin -> System.out.println(admin.getUsername() + " - " + admin.getRole()));
-
-        try {
-            System.out.print("\nВъведете потребителско име за смяна на парола: ");
-            String userForPassword = scanner.nextLine();
-            System.out.print("Въведете нова парола: ");
-            String newPassword = scanner.nextLine();
-            adminManager.updatePassword(userForPassword, newPassword);
-            System.out.println("Паролата е променена успешно!");
-        } catch (AdminNotFoundException | IllegalArgumentException e) {
-            System.out.println("Грешка при смяна на парола: " + e.getMessage());
-        }
-
-        try {
-            System.out.print("\nВъведете текущо потребителско име: ");
-            String oldUsername = scanner.nextLine();
-            System.out.print("Въведете ново потребителско име: ");
-            String newUsername = scanner.nextLine();
-            adminManager.updateUsername(oldUsername, newUsername);
-            System.out.println("Потребителското име е променено успешно!");
-        } catch (AdminNotFoundException | AdminAlreadyExistsException | IllegalArgumentException e) {
-            System.out.println("Грешка при смяна на име: " + e.getMessage());
-        }
-
-        try {
-            System.out.print("\nВъведете потребителско име за смяна на роля: ");
-            String userForRole = scanner.nextLine();
-            System.out.print("Въведете нова роля: ");
-            String newRole = scanner.nextLine();
-            adminManager.updateRole(userForRole, newRole);
-            System.out.println("Ролята е променена успешно!");
-        } catch (AdminNotFoundException | IllegalArgumentException e) {
-            System.out.println("Грешка при смяна на роля: " + e.getMessage());
-        }
-
         scanner.close();
     }
 }
