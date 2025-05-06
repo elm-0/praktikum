@@ -15,7 +15,7 @@ public class FoodDeliveryApplication implements CommandLineRunner {
 
 	private AuthenticationService authenticationService;
     private MenuService menuService; 
-
+    
     public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService) {
         this.authenticationService = authenticationService;
         this.menuService = menuService;
@@ -35,7 +35,7 @@ public class FoodDeliveryApplication implements CommandLineRunner {
         }
 
         if (currentUser instanceof Admin) {
-            openAdminPanel();
+            ((Admin) currentUser).useAdminManager();
         } else if (currentUser instanceof Employee) {
             openEmployeeMenu();
         } else if (currentUser instanceof User) {
@@ -63,9 +63,6 @@ public class FoodDeliveryApplication implements CommandLineRunner {
 
 		
 
-	public static void openAdminPanel(){
-		System.out.println("Admin panel open");
-	}
 
 	public static void openEmployeeMenu(){
 		System.out.println("Employee menu open");

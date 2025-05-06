@@ -48,12 +48,12 @@ public class Admin extends User {
     // }
 
     public Admin(String username, String password) {
-        super(username, hashPassword(password), Role.ADMIN.toString());
+        super(username, password, Role.ADMIN.toString()); //махнах хеширането, защото не го четеше при логване и не знаех как да го оправя, sorry
         this.adminManager = new AdminManager();
     }
 
     public Admin(String username, String password, String role) {
-        super(username, hashPassword(password), role);
+        super(username, password, role);
         this.adminManager = new AdminManager();
     }
 
