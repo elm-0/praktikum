@@ -1,14 +1,24 @@
 package delivery;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.antlr.v4.runtime.atn.AmbiguityInfo;
-
-import delivery.food_delivery.*;
 import java.util.Scanner;
+
+import delivery.food_delivery.AdminAlreadyExistsException;
+import delivery.food_delivery.AdminNotFoundException;
+import delivery.food_delivery.AuthenticationException;
+import delivery.food_delivery.NoAdminLoggedInException;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Admin extends User {
@@ -18,7 +28,13 @@ public class Admin extends User {
     @Column(name = "action")
     private List<String> actionHistory = new ArrayList<>();
 
-    AdminManager adminManager = new AdminManager();
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Transient
+    AdminManager adminManager;
 
     public enum Role {
         SUPER_ADMIN,
@@ -33,10 +49,12 @@ public class Admin extends User {
 
     public Admin(String username, String password) {
         super(username, hashPassword(password), Role.ADMIN.toString());
+        this.adminManager = new AdminManager();
     }
 
     public Admin(String username, String password, String role) {
         super(username, hashPassword(password), role);
+        this.adminManager = new AdminManager();
     }
 
     public boolean isSuperAdmin() {

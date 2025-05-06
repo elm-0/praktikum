@@ -1,24 +1,25 @@
-package delivery.food_delivery;
+package delivery;
 
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import delivery.Admin;
-import delivery.Employee;
-import delivery.User;
+import delivery.food_delivery.AuthenticationService;
 import delivery.service.MenuService;
 
 
 @SpringBootApplication
 public class FoodDeliveryApplication implements CommandLineRunner {
 
-	@Autowired
 	private AuthenticationService authenticationService;
     private MenuService menuService; 
+
+    public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService) {
+        this.authenticationService = authenticationService;
+        this.menuService = menuService;
+    }
 
 	public static void main(String[] args) {
 		SpringApplication.run(FoodDeliveryApplication.class, args);

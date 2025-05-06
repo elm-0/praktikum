@@ -3,7 +3,6 @@ package delivery.service;
 import java.util.List;
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import delivery.Dish;
@@ -15,7 +14,7 @@ public class MenuService {
     private final ShoppingCartService cartService;
     private final DishService dishService;
 
-    @Autowired
+    
     public MenuService(ShoppingCartService cartService, DishService dishService) {
         this.cartService = cartService;
         this.dishService = dishService;
