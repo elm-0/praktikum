@@ -1,11 +1,15 @@
 package delivery;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Employee extends User {
     private String employeeId;
     private int numberOfAvailableOrders;
+    @ElementCollection
     private List<String> acceptedOrderIds;
     private boolean isAvailable;
     private double totalRevenue;
@@ -85,7 +89,7 @@ public class Employee extends User {
     @Override
     public String toString() {
         return "Employee{" +
-                "username='" + username + '\'' +
+                "username='" + getUsername() + '\'' +
                 ", employeeId='" + employeeId + '\'' +
                 ", numberOfAvailableOrders=" + numberOfAvailableOrders +
                 ", acceptedOrderIds=" + acceptedOrderIds +
