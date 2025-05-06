@@ -72,6 +72,7 @@ public class MenuService {
                 }
                 default -> System.out.println("Invalid input.");
             }
+            scanner.close();
         }
     }
 }
