@@ -6,6 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import delivery.food_delivery.AuthenticationService;
 import delivery.service.MenuService;
 
@@ -15,10 +18,12 @@ public class FoodDeliveryApplication implements CommandLineRunner {
 
 	private AuthenticationService authenticationService;
     private MenuService menuService; 
+    private final ApplicationContext context;
     
-    public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService) {
+    public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService, ApplicationContext context) {
         this.authenticationService = authenticationService;
         this.menuService = menuService;
+        this.context = context;
     }
 
 	public static void main(String[] args) {
@@ -61,8 +66,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
     
                 case "3":
                     System.out.println("Exiting...");
-                    return;
-    
+                    int exitCode = SpringApplication.exit(context, () -> 0);
+                    System.exit(exitCode);
+                    break;
+            
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
