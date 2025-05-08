@@ -1,20 +1,16 @@
 package delivery;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import org.springframework.context.ApplicationContext;
 
 import delivery.food_delivery.AuthenticationService;
 import delivery.service.MenuService;
-
-import delivery.model.ShoppingCart;
-import delivery.model.Employee;
 import delivery.service.ShoppingCartService;
-import delivery.model.User;
 
 
 @SpringBootApplication
@@ -25,10 +21,11 @@ public class FoodDeliveryApplication implements CommandLineRunner {
     private final ApplicationContext context;
     private final ShoppingCartService shoppingCartService;
     
-    public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService, ApplicationContext context) {
+    public FoodDeliveryApplication(AuthenticationService authenticationService, MenuService menuService, ApplicationContext context, ShoppingCartService shoppingCartService) {
         this.authenticationService = authenticationService;
         this.menuService = menuService;
         this.context = context;
+        this.shoppingCartService = shoppingCartService;
     }
 
 	public static void main(String[] args) {
@@ -57,7 +54,7 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                     if (currentUser instanceof Admin) {
                         ((Admin) currentUser).useAdminManager();
                     } else if (currentUser instanceof Employee) {
-                        openEmployeeMenu();Menu(scanner, (Employee) currentUser);
+                        openEmployeeMenu(scanner, (Employee) currentUser); //Menu(scanner, (Employee) currentUser); няма такъв метод
                     } else if (currentUser instanceof User) {
                         menuService.openMenu();
                     } else {
