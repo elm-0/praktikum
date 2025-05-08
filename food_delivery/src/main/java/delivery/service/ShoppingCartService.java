@@ -43,4 +43,38 @@ public class ShoppingCartService {
         cart.clearCart();
         shoppingCartRepository.save(cart);
     }
+
+    public void assignOrderToEmployee(Long orderId, Employee employee) {
+        ShoppingCart cart = findCartById(orderId);
+        if (cart == null) {
+            throw new IllegalArgumentException("Order with ID " + orderId + " not found.");
+        }
+        if (cart.getEmployee() != null) {
+            throw new IllegalStateException("Order with ID " + orderId + " is already assigned.");
+        }
+        cart.setEmployee(employee);
+        cart.setStatus("Assigned");
+        shoppingCartRepository.save(cart);
+    }
+
+    public List<ShoppingCart> getAssignedOrdersToEmployee(Employee employee) {
+        return shoppingCartRepository.findAll().stream()
+                .filter(cart -> cart.getEmployee() != null && cart.getEmployee().getId().equals(employee.getId()) && "Assigned".equals(cart.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    public void updateOrderStatus(Long orderId, String newStatus) {
+        ShoppingCart cart = findCartById(orderId);
+        if (cart == null) {
+            throw new IllegalArgumentException("Order with ID " + orderId + " not found.");
+        }
+        cart.setStatus(newStatus);
+        shoppingCartRepository.save(cart);
+    }
+
+    public List<ShoppingCart> getEmployeeOrderHistory(Employee employee) {
+        return shoppingCartRepository.findAll().stream()
+                .filter(cart -> cart.getEmployee() != null && cart.getEmployee().getId().equals(employee.getId()))
+                .collect(Collectors.toList());
+    }
 }
