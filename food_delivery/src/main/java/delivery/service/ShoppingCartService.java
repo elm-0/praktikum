@@ -18,9 +18,17 @@ public class ShoppingCartService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
-    public ShoppingCart createCart() {
-        return shoppingCartRepository.save(new ShoppingCart());
-    }
+    public ShoppingCart createCart(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null when creating a shopping cart.");
+        }
+
+        ShoppingCart cart = new ShoppingCart();
+        cart.setUserId(userId);
+        cart.setStatus("ACTIVE");
+        cart.setCreatedAt(LocalDateTime.now());
+        return shoppingCartRepository.save(cart);
+    }    
 
     public ShoppingCart findCartById(Long id) {
         return shoppingCartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
@@ -57,15 +65,17 @@ public class ShoppingCartService {
         if (cart.getEmployee() != null) {
             throw new IllegalStateException("Order with ID " + orderId + " is already assigned.");
         }
+        if (!employee.isAvailable()) {
+            throw new IllegalStateException("Employee " + employee.getEmployeeId() + " is not available to take more orders.");
+        }
         cart.setEmployee(employee);
         cart.setStatus("Assigned");
+        employee.acceptOrder(orderId.toString());
         shoppingCartRepository.save(cart);
     }
 
     public List<ShoppingCart> getAssignedOrdersToEmployee(Employee employee) {
-        return shoppingCartRepository.findAll().stream()
-                .filter(cart -> cart.getEmployee() != null && cart.getEmployee().getId().equals(employee.getId()) && "Assigned".equals(cart.getStatus()))
-                .collect(Collectors.toList());
+        return shoppingCartRepository.findAssignedOrdersByEmployeeId(employee.getId());
     }
 
     public void updateOrderStatus(Long orderId, String newStatus) {
@@ -78,9 +88,7 @@ public class ShoppingCartService {
     }
 
     public List<ShoppingCart> getEmployeeOrderHistory(Employee employee) {
-        return shoppingCartRepository.findAll().stream()
-                .filter(cart -> cart.getEmployee() != null && cart.getEmployee().getId().equals(employee.getId()))
-                .collect(Collectors.toList());
+        return shoppingCartRepository.findOrderHistoryByEmployeeId(employee.getId());
     }
 
 }
