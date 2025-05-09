@@ -43,9 +43,9 @@ public class Admin extends User {
         SUPPORT
     }
 
-    // public Admin() { //davashe greshka i go slojih kato komentar
-    // super();
-    // }
+     public Admin() { 
+        super();
+     }
 
     public Admin(String username, String password) {
         super(username, password, Role.ADMIN.toString()); //махнах хеширането, защото не го четеше при логване и не знаех как да го оправя, sorry

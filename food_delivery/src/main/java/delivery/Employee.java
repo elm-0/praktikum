@@ -26,6 +26,10 @@ public class Employee extends User {
     @OneToMany(mappedBy = "employee")
     private List<ShoppingCart> assignedOrders = new ArrayList<>();
 
+    public Employee() {
+        
+    }
+
     public Employee(String username, String password, String employeeId) {
         super(username, password, "EMPLOYEE");
         this.employeeId = employeeId;

@@ -1,10 +1,11 @@
 package delivery.service;
 
-import delivery.Employee;
-import delivery.repository.EmployeeRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import delivery.Employee;
+import delivery.repository.EmployeeRepository;
 
 @Service
 public class EmployeeService {
@@ -38,4 +39,16 @@ public class EmployeeService {
         employee.setNumberOfAvailableOrders(employee.getNumberOfAvailableOrders() - 1);
         employeeRepository.save(employee);
     }
+
+    /* 
+    public Long getNextEmployeeId() {
+        Employee lastEmployee = employeeRepository.findTopByOrderByIdDesc();
+
+        if (lastEmployee != null) {
+            return lastEmployee.getId() + 1;
+        } else {
+            return 1L;
+        }
+    }
+        */
 }
