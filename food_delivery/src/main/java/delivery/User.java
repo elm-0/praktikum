@@ -13,16 +13,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   // private static long idCounter = 1;
     protected String username;
     protected String password;
     protected String role;
-    //int itemsInOrder;
-    //double orderFinalPrice;
-    
+    private int items_in_order;
+    private double order_final_price;
 
     public User(String username, String password, String role) {
-        //this.id = idCounter++;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -38,6 +35,10 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 
