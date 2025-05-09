@@ -32,7 +32,7 @@ public class MenuService {
 
         while (true) {
             printMenu(menu);
-            
+
             System.out.println("\nChoose an option:");
             System.out.println("1 - Add item to cart");
             System.out.println("2 - Remove item from cart");
@@ -43,6 +43,7 @@ public class MenuService {
 
             switch (input) {
                 case "1" -> {
+                    printMenu(menu);
                     System.out.print("Enter item number to add: ");
                     int idx = Integer.parseInt(scanner.nextLine()) - 1;
                     if (idx >= 0 && idx < menu.size()) {
@@ -51,6 +52,7 @@ public class MenuService {
                     }
                 }
                 case "2" -> {
+                    printCartItems(cart);
                     System.out.print("Enter item number to remove: ");
                     int idx = Integer.parseInt(scanner.nextLine()) - 1;
                     if (idx >= 0 && idx < menu.size()) {
@@ -59,6 +61,7 @@ public class MenuService {
                     }
                 }
                 case "3" -> {
+                    printCartItems(cart);
                     double total = cartService.calculateCartTotal(cart.getId());
                     System.out.println("Total: $" + total);
                     System.out.println("Order sent! Thank you.");
