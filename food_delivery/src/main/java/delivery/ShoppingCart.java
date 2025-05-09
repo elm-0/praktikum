@@ -20,6 +20,8 @@ import jakarta.persistence.GeneratedValue;
         private List<Dish> items = new ArrayList<>();
 
         private String status;
+        private Long userId;
+        private LocalDateTime createdAt;
 
         @jakarta.persistence.ManyToOne
         private Employee employee;
@@ -74,13 +76,19 @@ import jakarta.persistence.GeneratedValue;
             items.clear();
         }
 
-        public void setUserId(Long userId) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'setUserId'");
+        public Long getUserId() {
+            return userId;
         }
 
-		public void setCreatedAt(LocalDateTime now) {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Unimplemented method 'setCreatedAt'");
-		}
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public LocalDateTime getCreatedAt() {
+            return createdAt;
+        }
+
+		public void setCreatedAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+        }
 }

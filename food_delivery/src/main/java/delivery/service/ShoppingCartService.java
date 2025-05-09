@@ -1,15 +1,14 @@
 package delivery.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import delivery.Dish;
 import delivery.Employee;
 import delivery.ShoppingCart;
 import delivery.repository.ShoppingCartRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class ShoppingCartService {
