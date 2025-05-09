@@ -1,9 +1,10 @@
     package delivery;
-    import java.util.ArrayList;
+    import java.time.LocalDateTime;
+import java.util.ArrayList;
     import java.util.List;
 
-    import jakarta.persistence.Entity;
-    import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
     import jakarta.persistence.GenerationType;
     import jakarta.persistence.Id;
     import jakarta.persistence.ManyToMany;
@@ -17,6 +18,11 @@
 
         @ManyToMany
         private List<Dish> items = new ArrayList<>();
+
+        private String status;
+
+        @jakarta.persistence.ManyToOne
+        private Employee employee;
 
         public ShoppingCart() {}
 
@@ -67,4 +73,14 @@
         public void clearCart() {
             items.clear();
         }
+
+        public void setUserId(Long userId) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'setUserId'");
+        }
+
+		public void setCreatedAt(LocalDateTime now) {
+			// TODO Auto-generated method stub
+			throw new UnsupportedOperationException("Unimplemented method 'setCreatedAt'");
+		}
 }
