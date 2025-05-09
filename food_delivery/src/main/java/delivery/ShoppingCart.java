@@ -23,6 +23,22 @@
         public Long getId() {
             return id;
         }
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public Employee getEmployee() {
+            return employee;
+        }
+
+        public void setEmployee(Employee employee) {
+            this.employee = employee;
+        }
+
 
         public void addItem(Dish item) {
             items.add(item);
