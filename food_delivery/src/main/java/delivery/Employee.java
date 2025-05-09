@@ -7,12 +7,19 @@ import java.util.List;
 
 @Entity
 public class Employee extends User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     private String employeeId;
     private int numberOfAvailableOrders;
     @ElementCollection
     private List<String> acceptedOrderIds;
     private boolean isAvailable;
     private double totalRevenue;
+
+    @OneToMany(mappedBy = "employee")
+    private List<ShoppingCart> assignedOrders = new ArrayList<>();
 
     public Employee(String username, String password, String employeeId) {
         super(username, password, "EMPLOYEE");
@@ -21,6 +28,22 @@ public class Employee extends User {
         this.acceptedOrderIds = new ArrayList<>();
         this.isAvailable = true;
         this.totalRevenue = 0.0;
+    }
+
+    public List<ShoppingCart> getAssignedOrders() {
+        return assignedOrders;
+    }
+
+    public void setAssignedOrders(List<ShoppingCart> assignedOrders) {
+        this.assignedOrders = assignedOrders;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmployeeId() {
