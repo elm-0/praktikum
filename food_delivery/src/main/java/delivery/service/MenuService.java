@@ -21,12 +21,13 @@ public class MenuService {
     }
 
     
-    public void openMenu() {
+    public void openMenu(Long userId) {
+        if (userId == null) throw new IllegalArgumentException("User ID cannot be null when creating a shopping cart.");
+        
         Scanner scanner = new Scanner(System.in);
-
-        Long userId = 1L; // ще трябва да се добави логика когато е логнат някой
+        
         ShoppingCart cart = cartService.createCart(userId);
-
+        
         List<Dish> menu = dishService.getAllDishes(); 
 
         while (true) {
@@ -65,15 +66,16 @@ public class MenuService {
                     double total = cartService.calculateCartTotal(cart.getId());
                     System.out.println("Total: $" + total);
                     System.out.println("Order sent! Thank you.");
+                    scanner.close();
                     return;
                 }
                 case "4" -> {
                     System.out.println("Exiting.");
+                    scanner.close();
                     return;
                 }
                 default -> System.out.println("Invalid input.");
             }
-            scanner.close();
         }
     }
 }

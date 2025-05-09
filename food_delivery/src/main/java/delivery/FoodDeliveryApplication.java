@@ -54,9 +54,9 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                     if (currentUser instanceof Admin) {
                         ((Admin) currentUser).useAdminManager();
                     } else if (currentUser instanceof Employee) {
-                        openEmployeeMenu(scanner, (Employee) currentUser); //Menu(scanner, (Employee) currentUser); няма такъв метод
+                        openEmployeeMenu(scanner, (Employee) currentUser);
                     } else if (currentUser instanceof User) {
-                        menuService.openMenu();
+                        menuService.openMenu(currentUser.getId());
                     } else {
                         System.out.println("Unknown role!");
                     }
