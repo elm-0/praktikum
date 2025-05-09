@@ -31,12 +31,8 @@ public class MenuService {
         List<Dish> menu = dishService.getAllDishes(); 
 
         while (true) {
-            System.out.println("Menu:");
-            for (int i = 0; i < menu.size(); i++) {
-                Dish d = menu.get(i);
-                System.out.printf("%d - %s ($%.2f)\n", i + 1, d.getName(), d.getPrice());
-            }
-
+            printMenu(menu);
+            
             System.out.println("\nChoose an option:");
             System.out.println("1 - Add item to cart");
             System.out.println("2 - Remove item from cart");
@@ -76,6 +72,28 @@ public class MenuService {
                 }
                 default -> System.out.println("Invalid input.");
             }
+        }
+    }
+
+    public void printMenu(List<Dish> menu) {
+        System.out.println("Menu:");
+        for (int i = 0; i < menu.size(); i++) {
+            Dish d = menu.get(i);
+            System.out.printf("%d - %s ($%.2f)\n", i + 1, d.getName(), d.getPrice());
+    }
+}
+    
+    public void printCartItems(ShoppingCart cart) {
+        List<Dish> cartItems = cart.getItems();
+        if (cartItems.isEmpty()) {
+            System.out.println("Your cart is empty.");
+    } else {
+            System.out.println("Shopping Cart:");
+            for (Dish dish : cartItems) {
+                System.out.printf("%s ($%.2f)\n", dish.getName(), dish.getPrice());
+            }
+            double total = cartService.calculateCartTotal(cart.getId());
+            System.out.printf("Total: $%.2f\n", total);
         }
     }
 }
