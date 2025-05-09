@@ -24,7 +24,8 @@ public class MenuService {
     public void openMenu() {
         Scanner scanner = new Scanner(System.in);
 
-        ShoppingCart cart = cartService.createCart();
+        Long userId = 1L // ще трябва да се добави логика когато е логнат някой
+        ShoppingCart cart = cartService.createCart(userId);
 
         List<Dish> menu = dishService.getAllDishes(); 
 
