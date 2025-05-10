@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Employee extends User {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +22,9 @@ public class Employee extends User {
     private List<String> acceptedOrderIds;
     private boolean isAvailable;
     private double totalRevenue;
+    private  String username;
+    private String password;
+    private String role;
 
     @OneToMany(mappedBy = "employee")
     private List<ShoppingCart> assignedOrders = new ArrayList<>();
@@ -31,13 +34,24 @@ public class Employee extends User {
     }
 
     public Employee(String username, String password, String employeeId) {
-        super(username, password, "EMPLOYEE");
+        //super(username, password, "EMPLOYEE");
+        this.username = username;
+        this.password = password;
+        this.role = "EMPLOYEE";
         this.employeeId = employeeId;
         this.numberOfAvailableOrders = 1;
         this.acceptedOrderIds = new ArrayList<>();
         this.isAvailable = true;
         this.totalRevenue = 0.0;
     }
+
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getRole() { return role; }
+
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setRole(String role) { this.role = role; }
 
     public List<ShoppingCart> getAssignedOrders() {
         return assignedOrders;

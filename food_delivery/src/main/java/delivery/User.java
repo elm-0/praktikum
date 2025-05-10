@@ -13,9 +13,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    protected String username;
-    protected String password;
-    protected String role;
+    private String username;
+    private String password;
+    private String role;
     private int items_in_order;
     private double order_final_price;
 
@@ -24,6 +24,7 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
      public User() {
     }
 

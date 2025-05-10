@@ -35,48 +35,97 @@ public class FoodDeliveryApplication implements CommandLineRunner {
 	@Override
     public void run(String... args) {
         Scanner scanner = new Scanner(System.in);
+        String chosenRole = "";
 
-        while (true) {
-            System.out.println("\nChoose an option:");
-            System.out.println("1. Login");
-            System.out.println("2. Register");
-            System.out.println("3. Exit");
-    
+        while (true){
+            System.out.println("\nChoose role:");
+            System.out.println("1. User");
+            System.out.println("2. Employee");
+            System.out.println("3. Admin");
+
             String choice = scanner.nextLine();
-    
             switch (choice) {
-                case "1":
-                    User currentUser = null;
-                    while (currentUser == null) {
-                        currentUser = login(scanner);
-                    }
+                case "1" -> chosenRole = "user";
     
-                    if (currentUser instanceof Admin) {
-                        ((Admin) currentUser).useAdminManager();
-                    } else if (currentUser instanceof Employee) {
-                        openEmployeeMenu(scanner, (Employee) currentUser);
-                    } else if (currentUser instanceof User) {
-                        menuService.openMenu(currentUser.getId());
-                    } else {
-                        System.out.println("Unknown role!");
-                    }
-                    break;
+                case "2" -> chosenRole = "employee";
     
-                case "2":
-                    register(scanner);
-                    break;
-    
-                case "3":
-                    System.out.println("Exiting...");
-                    int exitCode = SpringApplication.exit(context, () -> 0);
-                    System.exit(exitCode);
-                    break;
-            
-                default:
+                case "3" -> chosenRole = "admin";
+                default -> {
                     System.out.println("Invalid choice. Please try again.");
+                }
             }
+                    
+                    while(!"".equals(chosenRole)){
+                        switch (chosenRole) {
+                            case "user" -> {
+                                printMenuOptions();
+                                String choiceLogin = scanner.nextLine();
+                                switch (choiceLogin) {
+                                    case "1":
+                                        delivery.User currentUser = null;
+                                        while (currentUser == null) {
+                                            currentUser = loginUser(scanner);
+                                            menuService.openMenu(currentUser.getId());}
+                                    case "2":
+                                        register(scanner);
+                                        
+                                    case "3":
+                                        System.out.println("Exiting...");
+                                        int exitCode = SpringApplication.exit(context, () -> 0);
+                                        System.exit(exitCode);
+                                    default:
+                                        System.out.println("Invalid choice. Please try again.");
+                                }
+                            }
+                            case "employee" -> {
+                                printMenuOptions();
+                                String choiceLogin = scanner.nextLine();
+                                switch (choiceLogin) {
+                                    case "1":
+                                        delivery.Employee currentEmployee = null;
+                                        while (currentEmployee == null) {
+                                            currentEmployee = loginEmployee(scanner);
+                                            openEmployeeMenu(scanner, currentEmployee); }
+                                    case "2":
+                                        register(scanner);
+                                        
+                                    case "3":
+                                        System.out.println("Exiting...");
+                                        int exitCode = SpringApplication.exit(context, () -> 0);
+                                        System.exit(exitCode);
+                                    default:
+                                        System.out.println("Invalid choice. Please try again.");
+                                }
+                            }
+                            case"admin" -> {
+                                printMenuOptions();
+                                String choiceLogin = scanner.nextLine();
+                                switch (choiceLogin) {
+                                    case "1":
+                                        delivery.Admin currentAdmin = null;
+                                        while (currentAdmin == null) {
+                                            currentAdmin = loginAdmin(scanner);
+                                            currentAdmin.useAdminManager();
+                                        }
+                                    case "2":
+                                        register(scanner);
+                                        
+                                    case "3":
+                                        System.out.println("Exiting...");
+                                        int exitCode = SpringApplication.exit(context, () -> 0);
+                                        System.exit(exitCode);
+                                    default:
+                                        System.out.println("Invalid choice. Please try again.");
+                                }
+                            }
+                            default -> System.out.println("Invalid choice. Please try again.");
+                            
+                        }
+                    }   
         }
+        
     }
+
 
     private void register(Scanner scanner) {
         System.out.println("Choose a username:");
@@ -90,13 +139,13 @@ public class FoodDeliveryApplication implements CommandLineRunner {
     }
     
 
-    private User login(Scanner scanner) {
+    private delivery.User loginUser(Scanner scanner) {
         System.out.println("Input username:");
         String username = scanner.nextLine();
         System.out.println("Input password:");
         String password = scanner.nextLine();
 
-        User user = authenticationService.login(username, password);
+        delivery.User user = authenticationService.loginUser(username, password);
         if (user != null) {
             System.out.println("Welcome, " + user.getUsername());
             return user;
@@ -106,7 +155,44 @@ public class FoodDeliveryApplication implements CommandLineRunner {
         }
     }
 
+    private delivery.Employee loginEmployee(Scanner scanner) {
+        System.out.println("Input username:");
+        String username = scanner.nextLine();
+        System.out.println("Input password:");
+        String password = scanner.nextLine();
 
+        delivery.Employee employee = authenticationService.loginEmployee(username, password);
+        if (employee != null) {
+            System.out.println("Welcome, " + employee.getUsername());
+            return employee;
+        } else {
+            System.out.println("Login unsuccessful. Please try again.");
+            return null;
+        }
+    }
+    private delivery.Admin loginAdmin(Scanner scanner) {
+        System.out.println("Input username:");
+        String username = scanner.nextLine();
+        System.out.println("Input password:");
+        String password = scanner.nextLine();
+
+        delivery.Admin admin = authenticationService.loginAdmin(username, password);
+        if (admin != null) {
+            System.out.println("Welcome, " + admin.getUsername());
+            return admin;
+        } else {
+            System.out.println("Login unsuccessful. Please try again.");
+            return null;
+        }
+    }
+
+    public void printMenuOptions(){
+        System.out.println("\nChoose an option:");
+        System.out.println("1. Login");
+        System.out.println("2. Register");
+        System.out.println("3. Exit");
+    
+    }
 
 
     public void openEmployeeMenu(Scanner scanner, Employee currentEmployee) {
@@ -182,6 +268,7 @@ public class FoodDeliveryApplication implements CommandLineRunner {
             orderHistory.forEach(System.out::println);
         }
     }
+    
 }
 
 

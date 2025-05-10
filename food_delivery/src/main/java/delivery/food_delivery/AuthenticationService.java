@@ -17,6 +17,8 @@ import delivery.repository.UserRepository;
 public class AuthenticationService {
 
     private Map<String, User> users = new HashMap<>();
+    private Map<String, Employee> employees = new HashMap<>();
+    private Map<String, Admin> admins = new HashMap<>();
     private UserRepository userRepository;
     private AdminRepository adminRepository;
     private EmployeeRepository employeeRepository;
@@ -30,35 +32,15 @@ public class AuthenticationService {
         loadUsersFromDatabase();
     }
 
-    /* 
-    public AuthenticationService() { //тестови потребители
-        //users.put("admin", new Admin("admin", "admin"));
-        //users.put("employee", new Employee("employee", "employee", "EMP001"));
-        //users.put("user", new User("user", "user", "USER"));
-
-        Admin testAdmin= new Admin("admin", "admin");
-        adminRepository.save(testAdmin);
-        users.put("admin", testAdmin);
-
-        Employee testEmployee= new Employee("employee", "employee", "EMP001");
-        employeeRepository.save(testEmployee);
-        users.put("employee", testEmployee);
-
-        User testUser= new User("user", "user", "USER");
-        userRepository.save(testUser);
-        users.put("user", testUser);
-    }
-    */
-
     private void loadUsersFromDatabase() {
-        adminRepository.findAll().forEach(admin -> users.put(admin.getUsername(), admin));
-        employeeRepository.findAll().forEach(employee -> users.put(employee.getUsername(), employee));
+        adminRepository.findAll().forEach(admin -> admins.put(admin.getUsername(), admin));
+        employeeRepository.findAll().forEach(employee -> employees.put(employee.getUsername(), employee));
         userRepository.findAll().forEach(user -> users.put(user.getUsername(), user));
     }
 
 
     public void register(String username, String password, String role) {
-        if (users.containsKey(username)) {
+        if (users.containsKey(username) || employees.containsKey(username) || admins.containsKey(username)) {
             System.out.println("Потребител с това име вече съществува!");
             return;
         }
@@ -66,20 +48,16 @@ public class AuthenticationService {
 
         switch (role.toLowerCase()) {
             case "admin":
-                Admin newAdmin = new Admin(username, password);
-                adminRepository.save(newAdmin); 
-                users.put(username, newAdmin);
+                Admin newAdmin = new Admin(username, password, role); 
+                admins.put(username, newAdmin);
+                adminRepository.save(newAdmin);
                 break;
             case "employee":
-                Employee newEmployee = new Employee(username, password, "EMP002"); 
-                users.put(username, newEmployee);
-                employeeRepository.save(newEmployee);  
-                users.put(username, newEmployee);
+               createAndSaveEmployee(username, password);
                 break;
             case "user":
                 User newUser;
                 newUser = new User(username, password, "USER");
-                users.put(username, newUser);
                 userRepository.save(newUser);
                 users.put(username, newUser);
                 break;
@@ -92,7 +70,7 @@ public class AuthenticationService {
         System.out.println("Успешна регистрация!");
     }
 
-    public User login(String username, String password) {
+    public User loginUser(String username, String password) {
         User user = users.get(username);
         if (user == null) {
             System.out.println("Няма такъв потребител!");
@@ -109,5 +87,69 @@ public class AuthenticationService {
         System.out.println("Успешен вход: " + user.getUsername());
         return user;
     }
+
+    public Employee loginEmployee(String username, String password) {
+        Employee employee = employees.get(username);
+        if (employee == null) {
+            System.out.println("Няма такъв потребител!");
+            return null;
+        }
+        if (employee.getPassword() == null) {
+            System.out.println("Потребителят няма зададена парола!");
+            return null;
+        }
+        if (!employee.getPassword().equals(password)) {
+            System.out.println("Грешна парола!");
+            return null;
+        }
+        System.out.println("Успешен вход: " + employee.getUsername());
+        return employee;
+    }
+
+    public Admin loginAdmin(String username, String password) {
+        Admin admin = admins.get(username);
+        if (admin == null) {
+            System.out.println("Няма такъв потребител!");
+            return null;
+        }
+        if (admin.getPassword() == null) {
+            System.out.println("Потребителят няма зададена парола!");
+            return null;
+        }
+        if (!admin.getPassword().equals(password)) {
+            System.out.println("Грешна парола!");
+            return null;
+        }
+        System.out.println("Успешен вход: " + admin.getUsername());
+        return admin;
+    }
     
+
+    public void createAndSaveEmployee(String username, String password) {
+    if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+        System.out.println("Username or password is null/empty. Aborting save.");
+        return;
+    }
+
+    try {
+        Employee newEmployee = new Employee();
+        newEmployee.setUsername(username);
+        newEmployee.setPassword(password);
+        newEmployee.setEmployeeId("EMP" + username);  // You might want to ensure this ID is unique
+
+        System.out.println("Before saving: username=" + newEmployee.getUsername() +
+                           ", password=" + newEmployee.getPassword());
+
+        // Save to DB
+        employeeRepository.save(newEmployee);
+
+        System.out.println("After saving: username=" + newEmployee.getUsername() +
+                           ", password=" + newEmployee.getPassword());
+
+        employees.put(username, newEmployee);
+    } catch (Exception e) {
+        System.out.println("Failed to save employee.");
+        e.printStackTrace(); // This will show if a constraint or persistence error is thrown
+    }
+}
 }

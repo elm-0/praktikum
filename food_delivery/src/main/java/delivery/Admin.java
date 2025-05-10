@@ -21,7 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Transient;
 
 @Entity
-public class Admin extends User {
+public class Admin {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "admin_actions", joinColumns = @JoinColumn(name = "admin_id"))
@@ -32,6 +32,9 @@ public class Admin extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String username;
+    private String password;
+    private String role;
     
     @Transient
     AdminManager adminManager;
@@ -43,23 +46,23 @@ public class Admin extends User {
         SUPPORT
     }
 
-     public Admin() { 
-        super();
-     }
-
-    public Admin(String username, String password) {
-        super(username, password, Role.ADMIN.toString()); //махнах хеширането, защото не го четеше при логване и не знаех как да го оправя, sorry
-        this.adminManager = new AdminManager();
+    public Admin() {
     }
 
     public Admin(String username, String password, String role) {
-        super(username, password, role);
+        this.username = username;
+        this.password = password;
+        this.role = role;
         this.adminManager = new AdminManager();
     }
 
     public boolean isSuperAdmin() {
         return getRole().equals(Role.SUPER_ADMIN.toString());
     }
+
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getRole() { return role; }
 
     public boolean isAdmin() {
         return getRole().equals(Role.ADMIN.toString());
@@ -87,24 +90,27 @@ public class Admin extends User {
         }
     }
 
-    @Override
+    //@Override
     public void setPassword(String password) {
         if (password == null || password.length() < 8) {
             throw new IllegalArgumentException("Паролата трябва да е минимум 8 символа.");
         }
-        super.setPassword(hashPassword(password));
+        //setPassword(hashPassword(password));
+        this.password = password;
         addAction("Паролата е променена");
     }
 
-    @Override
+    //@Override
     public void setUsername(String username) {
-        super.setUsername(username);
+        //super.setUsername(username);
+        this.username = username;
         addAction("Името е променено на " + username);
     }
 
-    @Override
+    //@Override
     public void setRole(String role) {
-        super.setRole(role);
+        //super.setRole(role);
+        this.role = role;
         addAction("Ролята е променена на " + role);
     }
 
