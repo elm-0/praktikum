@@ -64,8 +64,8 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                                     case "1":
                                         delivery.User currentUser = null;
                                         while (currentUser == null) {
-                                            currentUser = loginUser(scanner);
-                                            menuService.openMenu(currentUser.getId());}
+                                            currentUser = loginUser(scanner);}
+                                            menuService.openMenu(currentUser.getId());
                                     case "2":
                                         register(scanner);
                                         
@@ -84,8 +84,8 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                                     case "1":
                                         delivery.Employee currentEmployee = null;
                                         while (currentEmployee == null) {
-                                            currentEmployee = loginEmployee(scanner);
-                                            openEmployeeMenu(scanner, currentEmployee); }
+                                            currentEmployee = loginEmployee(scanner);}
+                                            openEmployeeMenu(scanner, currentEmployee); 
                                     case "2":
                                         register(scanner);
                                         
@@ -104,9 +104,8 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                                     case "1":
                                         delivery.Admin currentAdmin = null;
                                         while (currentAdmin == null) {
-                                            currentAdmin = loginAdmin(scanner);
+                                            currentAdmin = loginAdmin(scanner);}
                                             currentAdmin.useAdminManager();
-                                        }
                                     case "2":
                                         register(scanner);
                                         
