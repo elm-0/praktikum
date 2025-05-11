@@ -198,4 +198,52 @@ public class AdminManager {
     public List<Employee> getAllEmployees() {
         return new ArrayList<>(employees);
     }
+
+    private List<String> companies = new ArrayList<>();
+    private List<String> restaurants = new ArrayList<>();
+
+    public void addCompany(String companyName, Admin admin) throws IllegalArgumentException {
+        if (companyName == null || companyName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Името на фирмата не може да бъде празно.");
+        }
+        if (companies.contains(companyName)) {
+            throw new IllegalArgumentException("Фирмата \"" + companyName + "\" вече съществува.");
+        }
+        companies.add(companyName);
+        admin.addAction("Добавена е фирма: " + companyName);
+    }
+
+    public void removeCompany(String companyName, Admin admin) throws IllegalArgumentException {
+        if (companyName == null || companyName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Името на фирмата не може да бъде празно.");
+        }
+        if (!companies.contains(companyName)) {
+            throw new IllegalArgumentException("Фирмата \"" + companyName + "\" не е намерена.");
+        }
+        companies.remove(companyName);
+        admin.addAction("Изтрита е фирма: " + companyName);
+    }
+
+    public void addRestaurant(String restaurantName, Admin admin) throws IllegalArgumentException {
+        if (restaurantName == null || restaurantName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Името на ресторанта не може да бъде празно.");
+        }
+        if (restaurants.contains(restaurantName)) {
+            throw new IllegalArgumentException("Ресторантът \"" + restaurantName + "\" вече съществува.");
+        }
+        restaurants.add(restaurantName);
+        admin.addAction("Добавен е ресторант: " + restaurantName);
+    }
+
+    public void removeRestaurant(String restaurantName, Admin admin) throws IllegalArgumentException {
+        if (restaurantName == null || restaurantName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Името на ресторанта не може да бъде празно.");
+        }
+        if (!restaurants.contains(restaurantName)) {
+            throw new IllegalArgumentException("Ресторантът \"" + restaurantName + "\" не е намерен.");
+        }
+        restaurants.remove(restaurantName);
+        admin.addAction("Изтрит е ресторант: " + restaurantName);
+    }
+
 }

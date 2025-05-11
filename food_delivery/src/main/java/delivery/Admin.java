@@ -28,6 +28,12 @@ public class Admin {
     @Column(name = "action")
     private List<String> actionHistory = new ArrayList<>();
 
+    @Transient
+    private List<String> companies = new ArrayList<>();
+
+    @Transient
+    private List<String> restaurants = new ArrayList<>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -137,7 +143,11 @@ public class Admin {
                 "6. Смяна на парола\n" +
                 "7. Смяна на потребителско име\n" +
                 "8. Смяна на роля\n" +
-                "9. Изход");
+                "9. Добавяне на фирма\n" +
+                "10. Премахване на фирма\n" +
+                "11. Добавяне на ресторант\n" +
+                "12. Премахване на ресторант\n" +
+                "13. Изход");
         int command = scanner.nextInt();
         switch (command) {
             case 1:
@@ -228,6 +238,54 @@ public class Admin {
                 }
                 break;
             case 9:
+                try {
+                    scanner.nextLine();
+                    System.out.print("Въведете име на фирмата за добавяне: ");
+                    String companyName = scanner.nextLine();
+                    adminManager.addCompany(companyName, adminManager.getCurrentAdmin());
+                    System.out.println("Фирмата е добавена успешно!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Грешка: " + e.getMessage());
+                }
+                break;
+
+            case 10:
+                try {
+                    scanner.nextLine();
+                    System.out.print("Въведете име на фирмата за премахване: ");
+                    String companyName = scanner.nextLine();
+                    adminManager.removeCompany(companyName, adminManager.getCurrentAdmin());
+                    System.out.println("Фирмата е премахната успешно!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Грешка: " + e.getMessage());
+                }
+                break;
+
+            case 11:
+                try {
+                    scanner.nextLine();
+                    System.out.print("Въведете име на ресторант за добавяне: ");
+                    String restaurantName = scanner.nextLine();
+                    adminManager.addRestaurant(restaurantName, adminManager.getCurrentAdmin());
+                    System.out.println("Ресторантът е добавен успешно!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Грешка: " + e.getMessage());
+                }
+                break;
+
+            case 12:
+                try {
+                    scanner.nextLine();
+                    System.out.print("Въведете име на ресторант за премахване: ");
+                    String restaurantName = scanner.nextLine();
+                    adminManager.removeRestaurant(restaurantName, adminManager.getCurrentAdmin());
+                    System.out.println("Ресторантът е премахнат успешно!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Грешка: " + e.getMessage());
+                }
+                break;
+
+            case 13:
                 System.out.println("Изход от администраторския панел.");
                 break;
             default:
