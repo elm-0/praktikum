@@ -76,10 +76,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "user" -> {
                                 delivery.User currentUser = null;
                                 while (currentUser == null) {
-                                    if (!scanner.hasNextLine()) {
-                                    System.out.println("No input detected. Exiting...");
-                                    return;
-                                }
+                                //    if (!scanner.hasNextLine()) {
+                                //    System.out.println("No input detected. Exiting...");
+                                //    return;
+                                //}
                                     currentUser = loginUser(scanner);
                                 }
                                 menuService.openMenu(currentUser.getId());
