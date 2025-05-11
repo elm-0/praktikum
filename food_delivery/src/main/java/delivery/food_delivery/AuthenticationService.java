@@ -48,6 +48,7 @@ public class AuthenticationService {
     switch (role.toLowerCase()) {
         case "admin":
             Admin newAdmin = new Admin(username, password, role); 
+            admins.put(username, newAdmin);
             adminRepository.save(newAdmin);
             break;
         case "employee":
@@ -55,6 +56,7 @@ public class AuthenticationService {
             break;
         case "user":
             User newUser = new User(username, password, "USER");
+            users.put(username, newUser);
             userRepository.save(newUser);
             break;
         default:
@@ -131,12 +133,12 @@ public class AuthenticationService {
         Employee newEmployee = new Employee();
         newEmployee.setUsername(username);
         newEmployee.setPassword(password);
-        newEmployee.setEmployeeId("EMP" + username);  // You might want to ensure this ID is unique
+        newEmployee.setEmployeeId("EMP" + username);  
 
         System.out.println("Before saving: username=" + newEmployee.getUsername() +
                            ", password=" + newEmployee.getPassword());
 
-        // Save to DB
+        
         employeeRepository.save(newEmployee);
 
         System.out.println("After saving: username=" + newEmployee.getUsername() +
@@ -145,7 +147,7 @@ public class AuthenticationService {
         employees.put(username, newEmployee);
     } catch (Exception e) {
         System.out.println("Failed to save employee.");
-        e.printStackTrace(); // This will show if a constraint or persistence error is thrown
+        e.printStackTrace();
     }
 }
 }

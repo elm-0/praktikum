@@ -87,10 +87,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "employee" -> {
                                 delivery.Employee currentEmployee = null;
                                 while (currentEmployee == null) {
-                                    if (!scanner.hasNextLine()) {
-                                    System.out.println("No input detected. Exiting...");
-                                    return;
-                                }
+                                //    if (!scanner.hasNextLine()) {
+                                //    System.out.println("No input detected. Exiting...");
+                                //    return;
+                                //}
                                     currentEmployee = loginEmployee(scanner);
                                 }
                                 openEmployeeMenu(scanner, currentEmployee);
@@ -98,10 +98,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "admin" -> {
                                 delivery.Admin currentAdmin = null;
                                 while (currentAdmin == null) {
-                                     if (!scanner.hasNextLine()) {
-                                    System.out.println("No input detected. Exiting...");
-                                    return;
-                                }
+                                //     if (!scanner.hasNextLine()) {
+                                //    System.out.println("No input detected. Exiting...");
+                                //    return;
+                                //}
                                     currentAdmin = loginAdmin(scanner);
                                 }
                                 currentAdmin.useAdminManager();
@@ -110,10 +110,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                     }
 
                     case "2" -> {
-                     if (!scanner.hasNextLine()) {
-                        System.out.println("No input detected. Exiting...");
-                        return;
-                    } register(scanner);
+                    // if (!scanner.hasNextLine()) {
+                    //    System.out.println("No input detected. Exiting...");
+                    //    return; } 
+                    register(scanner);
                 }
 
                     case "3" -> {
