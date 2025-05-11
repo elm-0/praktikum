@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import delivery.Dish;
 import delivery.ShoppingCart;
+import jakarta.transaction.Transactional;
 
 @Service
 public class MenuService {
@@ -20,7 +21,7 @@ public class MenuService {
         this.dishService = dishService;
     }
 
-    
+    @Transactional
     public void openMenu(Long userId) {
         if (userId == null) throw new IllegalArgumentException("User ID cannot be null when creating a shopping cart.");
         
@@ -52,7 +53,7 @@ public class MenuService {
                     }
                 }
                 case "2" -> {
-                    printCartItems(cart);
+                    printCartItems(cartService.findCartById(cart.getId()));
                     System.out.print("Enter item number to remove: ");
                     int idx = Integer.parseInt(scanner.nextLine()) - 1;
                     if (idx >= 0 && idx < menu.size()) {
@@ -61,7 +62,7 @@ public class MenuService {
                     }
                 }
                 case "3" -> {
-                    printCartItems(cart);
+                    printCartItems(cartService.findCartById(cart.getId()));
                     double total = cartService.calculateCartTotal(cart.getId());
                     System.out.println("Total: $" + total);
                     System.out.println("Order sent! Thank you.");
@@ -87,6 +88,7 @@ public class MenuService {
 }
     
     public void printCartItems(ShoppingCart cart) {
+        ShoppingCart updatedCart = cartService.findCartByIdWithItems(cart.getId());
         List<Dish> cartItems = cart.getItems();
         if (cartItems.isEmpty()) {
             System.out.println("Your cart is empty.");
@@ -95,7 +97,7 @@ public class MenuService {
             for (Dish dish : cartItems) {
                 System.out.printf("%s ($%.2f)\n", dish.getName(), dish.getPrice());
             }
-            double total = cartService.calculateCartTotal(cart.getId());
+            double total = cartService.calculateCartTotal(updatedCart.getId());
             System.out.printf("Total: $%.2f\n", total);
         }
     }

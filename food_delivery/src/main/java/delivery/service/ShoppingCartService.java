@@ -61,11 +61,17 @@ public class ShoppingCartService {
         return cart.getTotal();
     }
 
+   // public void clearCart(Long cartId) {
+    //    ShoppingCart cart = findCartById(cartId);
+    //    cart.clearCart();
+    //    shoppingCartRepository.save(cart);
+    //}
     public void clearCart(Long cartId) {
-        ShoppingCart cart = findCartById(cartId);
-        cart.clearCart();
+        ShoppingCart cart = findCartByIdWithItems(cartId);
+        cart.getItems().clear();
         shoppingCartRepository.save(cart);
     }
+
 
     public void assignOrderToEmployee(Long orderId, Employee employee) {
         ShoppingCart cart = findCartById(orderId);
@@ -100,5 +106,10 @@ public class ShoppingCartService {
     public List<ShoppingCart> getEmployeeOrderHistory(Employee employee) {
         return shoppingCartRepository.findOrderHistoryByEmployeeId(employee.getId());
     }
+
+    public ShoppingCart findCartByIdWithItems(Long id) {
+    return shoppingCartRepository.findByIdWithItems(id)
+        .orElseThrow(() -> new RuntimeException("Cart not found"));
+}
 
 }
