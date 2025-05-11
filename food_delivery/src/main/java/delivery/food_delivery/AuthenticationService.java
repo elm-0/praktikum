@@ -40,35 +40,31 @@ public class AuthenticationService {
 
 
     public void register(String username, String password, String role) {
-        if (users.containsKey(username) || employees.containsKey(username) || admins.containsKey(username)) {
-            System.out.println("Потребител с това име вече съществува!");
-            return;
-        }
-        
-
-        switch (role.toLowerCase()) {
-            case "admin":
-                Admin newAdmin = new Admin(username, password, role); 
-                admins.put(username, newAdmin);
-                adminRepository.save(newAdmin);
-                break;
-            case "employee":
-               createAndSaveEmployee(username, password);
-                break;
-            case "user":
-                User newUser;
-                newUser = new User(username, password, "USER");
-                userRepository.save(newUser);
-                users.put(username, newUser);
-                break;
-            default:
-                System.out.println("Невалидна роля! (трябва да е admin, employee или user)");
-                return;
-
-        }
-
-        System.out.println("Успешна регистрация!");
+    if (userRepository.existsByUsername(username) || employeeRepository.existsByUsername(username) || adminRepository.existsByUsername(username)) {
+        System.out.println("Потребител с това име вече съществува!");
+        return;
     }
+
+    switch (role.toLowerCase()) {
+        case "admin":
+            Admin newAdmin = new Admin(username, password, role); 
+            adminRepository.save(newAdmin);
+            break;
+        case "employee":
+            createAndSaveEmployee(username, password);
+            break;
+        case "user":
+            User newUser = new User(username, password, "USER");
+            userRepository.save(newUser);
+            break;
+        default:
+            System.out.println("Невалидна роля! (трябва да е admin, employee или user)");
+            return;
+    }
+
+    System.out.println("Успешна регистрация!");
+}
+
 
     public User loginUser(String username, String password) {
         User user = users.get(username);
