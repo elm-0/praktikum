@@ -7,8 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 import delivery.food_delivery.AuthenticationService;
+import delivery.repository.DishRepository;
 import delivery.service.MenuService;
 import delivery.service.ShoppingCartService;
 
@@ -43,7 +45,13 @@ public class FoodDeliveryApplication implements CommandLineRunner {
             System.out.println("2. Employee");
             System.out.println("3. Admin");
 
+            //String choice = scanner.nextLine();
+            if (!scanner.hasNextLine()) {
+                System.out.println("No input available. Exiting...");
+                return;
+            }
             String choice = scanner.nextLine();
+
             switch (choice) {
                 case "1" -> chosenRole = "user";
                 case "2" -> chosenRole = "employee";
@@ -56,7 +64,11 @@ public class FoodDeliveryApplication implements CommandLineRunner {
 
             while (!"".equals(chosenRole)) {
                 printMenuOptions();
-                String choiceLogin = scanner.nextLine();
+                if (!scanner.hasNextLine()) {
+                System.out.println("No input detected. Exiting...");
+                return;
+            }
+            String choiceLogin = scanner.nextLine();
 
                 switch (choiceLogin) {
                     case "1" -> {
@@ -64,6 +76,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "user" -> {
                                 delivery.User currentUser = null;
                                 while (currentUser == null) {
+                                    if (!scanner.hasNextLine()) {
+                                    System.out.println("No input detected. Exiting...");
+                                    return;
+                                }
                                     currentUser = loginUser(scanner);
                                 }
                                 menuService.openMenu(currentUser.getId());
@@ -71,6 +87,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "employee" -> {
                                 delivery.Employee currentEmployee = null;
                                 while (currentEmployee == null) {
+                                    if (!scanner.hasNextLine()) {
+                                    System.out.println("No input detected. Exiting...");
+                                    return;
+                                }
                                     currentEmployee = loginEmployee(scanner);
                                 }
                                 openEmployeeMenu(scanner, currentEmployee);
@@ -78,6 +98,10 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                             case "admin" -> {
                                 delivery.Admin currentAdmin = null;
                                 while (currentAdmin == null) {
+                                     if (!scanner.hasNextLine()) {
+                                    System.out.println("No input detected. Exiting...");
+                                    return;
+                                }
                                     currentAdmin = loginAdmin(scanner);
                                 }
                                 currentAdmin.useAdminManager();
@@ -85,7 +109,12 @@ public class FoodDeliveryApplication implements CommandLineRunner {
                         }
                     }
 
-                    case "2" -> register(scanner);
+                    case "2" -> {
+                     if (!scanner.hasNextLine()) {
+                        System.out.println("No input detected. Exiting...");
+                        return;
+                    } register(scanner);
+                }
 
                     case "3" -> {
                         System.out.println("Exiting...");
@@ -334,6 +363,30 @@ public class FoodDeliveryApplication implements CommandLineRunner {
             orderHistory.forEach(System.out::println);
         }
     }
+
+
+    //генерира автоматично храни в базата за по-лесно тестване
+    @Bean
+    public CommandLineRunner seedDishes(DishRepository dishRepository) {
+        return args -> {
+        List<Dish> initialDishes = List.of(
+            new Dish("Pizza Margherita", 8.99, true),
+            new Dish("Spaghetti Carbonara",10.99 , true),
+            new Dish("Caesar Salad",6.49, true),
+            new Dish("Burger",9.99, true),
+            new Dish("French Fries",4.99, true),
+            new Dish("Caprese Salad",6.49, true),
+            new Dish("Spaghetti Bolognese",10.99, true)
+        );
+
+        for (Dish dish : initialDishes) {
+            if (!dishRepository.existsByName(dish.getName())) {
+                dishRepository.save(dish);
+                System.out.println("Added: " + dish.getName());
+            }
+        }
+    };
+}
     
 }
 

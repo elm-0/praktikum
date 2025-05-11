@@ -15,6 +15,9 @@ public class Dish {
     private double price;
     private boolean available;
 
+    public Dish() {
+    }
+    
     public Dish(String name, double price, boolean available) {
         this.name = name;
         this.price = price;

@@ -9,6 +9,7 @@ import delivery.Dish;
 import delivery.Employee;
 import delivery.ShoppingCart;
 import delivery.repository.ShoppingCartRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ShoppingCartService {
@@ -34,20 +35,29 @@ public class ShoppingCartService {
         return shoppingCartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
     }
 
+
+    @Transactional
     public void addItemToCart(Long cartId, Dish dish) {
-        ShoppingCart cart = findCartById(cartId);
+         ShoppingCart cart = shoppingCartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
         cart.addItem(dish);
         shoppingCartRepository.save(cart);
     }
 
+    @Transactional
     public void removeItemFromCart(Long cartId, Dish dish) {
-        ShoppingCart cart = findCartById(cartId);
+         ShoppingCart cart = shoppingCartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        //Dish dish = dishRepository.findById(itemId)
+         //       .orElseThrow(() -> new RuntimeException("Item not found"));
         cart.removeItem(dish);
         shoppingCartRepository.save(cart);
     }
 
+    @Transactional
     public double calculateCartTotal(Long cartId) {
-        ShoppingCart cart = findCartById(cartId);
+        ShoppingCart cart = shoppingCartRepository.findByIdWithItems(cartId)
+            .orElseThrow(() -> new RuntimeException("Cart not found"));
         return cart.getTotal();
     }
 
